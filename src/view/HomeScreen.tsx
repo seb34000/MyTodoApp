@@ -6,16 +6,7 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import { ModalPicker } from '../component/ModalPicker';
 import emojiJson from '../../assets/emoji.json'
 import { Button } from '../component/Button';
-
-interface EmojiType {
-	emoji: string,
-	description: string,
-	category: string,
-	aliases: string[],
-	tags: string[],
-	unicode_version: string,
-	ios_version: string
-}
+import { EmojiType } from '../types/EmojiType';
 
 export const HomeScreen = () => {
     const colors = useTheme()
@@ -79,7 +70,7 @@ export const HomeScreen = () => {
                 </View>
                 <FlatList 
                     data={emojis}
-                    renderItem={({item, index}) => {
+                    renderItem={({item}) => {
                         return (
                             <Pressable style={({pressed}) => [
                                 {width: 70, alignItems: 'center', alignContent: 'center', margin: 5, opacity: pressed ? 0.5 : 1, padding: 7, marginBottom: 10}]
@@ -168,6 +159,4 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: '500',
     },
-
-
 });
