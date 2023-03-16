@@ -1,9 +1,8 @@
 export interface EmojiType {
-	emoji: string,
-	description: string,
-	category: string,
-	aliases: string[],
-	tags: string[],
-	unicode_version: string,
-	ios_version: string
+	codes: string
+	char: string
+	name: string
+	category: string
+	group: string
+	subgroup: string
 }

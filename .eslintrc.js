@@ -1,0 +1,50 @@
+module.exports = {
+	env: {
+		browser: true,
+		es2021: true,
+		node: true,
+	},
+	extends: [
+		// eslint-disable-next-line prettier/prettier
+		'eslint:recommended',
+		'plugin:react/recommended',
+		'plugin:@typescript-eslint/recommended',
+		'prettier',
+	],
+	overrides: [],
+	parser: '@typescript-eslint/parser',
+	parserOptions: {
+		ecmaVersion: 'latest',
+		sourceType: 'module',
+	},
+	plugins: ['react', '@typescript-eslint', 'prettier'],
+	rules: {
+		indent: ['error', 'tab', { SwitchCase: 1 }],
+		'linebreak-style': ['error', 'unix'],
+		quotes: ['error', 'single'],
+		'jsx-quotes': ['error', 'prefer-single'],
+		semi: ['error', 'never'],
+		'no-trailing-spaces': ['error', { ignoreComments: true }],
+		'prettier/prettier': [
+			'error',
+			{
+				useTabs: true,
+				tabWidth: 4,
+				semi: false,
+				singleQuote: true,
+				trailingComma: 'all',
+				bracketSpacing: true,
+				arrowParens: 'always',
+				endOfLine: 'auto',
+				maxLength: 80,
+				printWidth: 80,
+				typeScript: true,
+				parser: 'typescript',
+				qouteProps: 'as-needed',
+				jsxSingleQuote: true,
+				jsxBracketSameLine: true,
+			},
+			{},
+		],
+	},
+}

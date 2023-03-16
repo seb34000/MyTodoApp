@@ -1,12 +1,14 @@
-import { Ionicons } from '@expo/vector-icons';
-import { IconProps } from '../types/IconProps';
+import React from 'react'
+import { Ionicons } from '@expo/vector-icons'
 
-const CreateIcon = ({color, size, outline}: IconProps) => {
-    size = size || 24;
-    if (!outline) {
-        return <Ionicons name="ios-create-outline" size={size} color={color} />;
-    }
-    return <Ionicons name="ios-create" size={size} color={color} />;
-};
+import { IconProps } from '../types/IconProps'
 
-export { CreateIcon };
+const CreateIcon = ({ color, size, outline }: IconProps) => {
+	size = size || 24
+	if (!outline) {
+		return <Ionicons name='ios-create-outline' size={size} color={color} />
+	}
+	return <Ionicons name='ios-create' size={size} color={color} />
+}
+
+export { CreateIcon }
