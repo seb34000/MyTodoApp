@@ -48,6 +48,10 @@ function AppNavigator(props: Props) {
 			<Drawer.Navigator
 				initialRouteName='Home'
 				screenOptions={(propsItem) => ({
+					headerTintColor:
+						scheme === 'dark'
+							? darkTheme.colors.primary
+							: lightTheme.colors.primary,
 					drawerType: 'back',
 					headerRight: (item) => {
 						if (
