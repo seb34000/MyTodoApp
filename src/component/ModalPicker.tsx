@@ -2,18 +2,16 @@ import React, { useEffect, useState } from 'react'
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import {
-	// Modal,
 	View,
 	Text,
 	StyleSheet,
 	Pressable,
 	Keyboard,
 	Animated,
-	Dimensions,
 } from 'react-native'
 import { useTheme } from '@react-navigation/native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import Modal from 'react-native-modal'
+import { hexToRgba } from '../utils/hexToRgba'
 
 interface ModalPickerProps {
 	isOpen: boolean
@@ -57,10 +55,7 @@ export const ModalPicker = (props: ModalPickerProps) => {
 	}, [])
 
 	useEffect(() => {
-		// console.log('-----------------------')
-		// console.log('\nisOpen')
 		if (props.isOpen && open) {
-			// console.log('open\n')
 			startAnimation(0)
 			setOpen(true)
 		} else if (props.isOpen && !open) {
@@ -69,20 +64,14 @@ export const ModalPicker = (props: ModalPickerProps) => {
 		} else if (!props.isOpen && open) {
 			setOpen(false)
 		} else if (!props.isOpen && !open) {
-			// console.log('close\n')
-			// startAnimation(0)
 			setOpen(false)
-			// setTimeout(() => {
-			// }, 10)
 		}
 	}, [props.isOpen, open])
 
 	useEffect(() => {
 		if (props.selectData) {
 			startAnimation(250)
-			// setTimeout(() => {
 			props.onClose()
-			// }, 1000)
 		}
 	}, [props.selectData])
 
@@ -111,7 +100,9 @@ export const ModalPicker = (props: ModalPickerProps) => {
 			onSwipeComplete={() => {
 				startAnimation(250)
 				props.onClose()
-			}}>
+			}}
+			propagateSwipe
+		>
 			<Animated.View
 				style={[
 					styles.container,
@@ -123,12 +114,19 @@ export const ModalPicker = (props: ModalPickerProps) => {
 							},
 						],
 					},
-				]}>
+				]}
+			>
 				<View
 					style={[
 						styles.header,
-						{ backgroundColor: colors.colors.primary },
-					]}>
+						{
+							backgroundColor: hexToRgba(
+								colors.colors.primary,
+								0.5,
+							),
+						},
+					]}
+				>
 					<Text style={[styles.title, { color: colors.colors.text }]}>
 						{props.title}
 					</Text>
@@ -136,7 +134,8 @@ export const ModalPicker = (props: ModalPickerProps) => {
 						onPress={() => {
 							startAnimation(250)
 							props.onClose()
-						}}>
+						}}
+					>
 						<MaterialIcons
 							name='close'
 							size={24}

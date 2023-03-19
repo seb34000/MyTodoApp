@@ -20,8 +20,8 @@ import { EmojiType } from '../types/EmojiType'
 import { Input } from '../component/Input'
 import { ColorType } from '../types/ColorType'
 
-import { Category } from '../redux/categorySlice'
-import { addCategory } from '../redux/categorySlice'
+import { CategoryType } from '../types/Category'
+import { addTodoCategory } from '../store/action'
 
 export const CreateScreen = () => {
 	const colors = useTheme()
@@ -29,9 +29,6 @@ export const CreateScreen = () => {
 	const navigation = useNavigation()
 
 	const dispatch = useDispatch()
-	const categories = useSelector(
-		(state: { categories: Category[] }) => state.categories,
-	)
 
 	const [emojisList, setEmojisList] = React.useState<EmojiType[]>([])
 	const [selectedEmoji, setSelectedEmoji] = React.useState<EmojiType>()
@@ -56,17 +53,11 @@ export const CreateScreen = () => {
 
 	const searchEmoji = (text: string) => {
 		const filtered = emojiJson.filter((emoji) => {
-			if (emoji.char.includes(text)) {
+			if (emoji.emoji.includes(text)) {
 				return emoji
-			} else if (emoji.name.includes(text)) {
+			} else if (emoji.label.includes(text)) {
 				return emoji
-			} else if (emoji.category.includes(text)) {
-				return emoji
-			} else if (emoji.codes.includes(text)) {
-				return emoji
-			} else if (emoji.group.includes(text)) {
-				return emoji
-			} else if (emoji.subgroup.includes(text)) {
+			} else if (emoji.id.includes(text)) {
 				return emoji
 			}
 		})
@@ -99,7 +90,8 @@ export const CreateScreen = () => {
 					width: '90%',
 					alignSelf: 'center',
 					marginTop: 5,
-				}}>
+				}}
+			>
 				<Input
 					onChangeText={(text) => searchFunc(text)}
 					value={search}
@@ -116,7 +108,8 @@ export const CreateScreen = () => {
 							padding: 10,
 							backgroundColor: colors.colors.border,
 						},
-					]}>
+					]}
+				>
 					<Text style={{ color: colors.colors.primary }}>Clear</Text>
 				</Pressable>
 			</View>
@@ -148,9 +141,9 @@ export const CreateScreen = () => {
 								]}
 								onLongPress={() => {
 									showMessage({
-										message: item.char,
+										message: item.emoji,
 										description:
-											item.codes + ' - ' + item.category,
+											item.id + ' - ' + item.label,
 										type: 'info',
 										icon: 'info',
 									})
@@ -159,23 +152,25 @@ export const CreateScreen = () => {
 									setSelectedEmoji(item)
 									// setModalOpen(false)
 									setSelection(item)
-								}}>
+								}}
+							>
 								<Text style={{ fontSize: 50 }}>
-									{item.char}
+									{item.emoji}
 								</Text>
 								<Text
 									style={{
 										fontSize: 10,
 										color: colors.colors.text,
 										textAlign: 'center',
-									}}>
-									{item.name}
+									}}
+								>
+									{item.label}
 								</Text>
 							</Pressable>
 						)
 					}}
 					horizontal={true}
-					keyExtractor={(item) => item.char}
+					keyExtractor={(item) => item.id}
 					showsHorizontalScrollIndicator={false}
 					ListEmptyComponent={() => {
 						return (
@@ -185,7 +180,8 @@ export const CreateScreen = () => {
 									justifyContent: 'center',
 									flex: 1,
 									padding: 10,
-								}}>
+								}}
+							>
 								<Text style={{ color: colors.colors.text }}>
 									No emoji found
 								</Text>
@@ -224,7 +220,8 @@ export const CreateScreen = () => {
 									setSelectedColor(item)
 									// setModalOpen(false)
 									setSelection(item)
-								}}>
+								}}
+							>
 								<View
 									style={{
 										width: 50,
@@ -238,7 +235,8 @@ export const CreateScreen = () => {
 										fontSize: 10,
 										color: colors.colors.text,
 										textAlign: 'center',
-									}}>
+									}}
+								>
 									{item.name}
 								</Text>
 							</Pressable>
@@ -255,7 +253,8 @@ export const CreateScreen = () => {
 									justifyContent: 'center',
 									flex: 1,
 									padding: 10,
-								}}>
+								}}
+							>
 								<Text style={{ color: colors.colors.text }}>
 									No color found
 								</Text>
@@ -275,7 +274,7 @@ export const CreateScreen = () => {
 				icon: 'danger',
 			})
 			return
-		} else if (selectedEmoji.char === '') {
+		} else if (selectedEmoji.emoji === '') {
 			showMessage({
 				message: 'Emoji is required',
 				type: 'danger',
@@ -290,13 +289,7 @@ export const CreateScreen = () => {
 			})
 			return
 		}
-		if (
-			navigation
-				.getState()
-				.routeNames.find(
-					(e) => e === name || e === 'Home' || e === 'Create',
-				)
-		) {
+		if (navigation.getState().routeNames.find((e) => e === name)) {
 			showMessage({
 				message: 'Name already exists',
 				type: 'danger',
@@ -304,16 +297,15 @@ export const CreateScreen = () => {
 			})
 			return
 		}
-		const newCategory = {
-			id: categories.length + 1 || 1,
-			name: name,
-			emoji: selectedEmoji.char,
-			color: selectedColor.hex,
-		}
-		dispatch(addCategory(newCategory))
+		dispatch(addTodoCategory(selectedEmoji.emoji, selectedColor.hex, name))
 		setName('')
 		setSelectedEmoji(null)
 		setSelectedColor(null)
+		showMessage({
+			message: 'Category added',
+			type: 'success',
+			icon: 'success',
+		})
 	}
 
 	return (
@@ -321,27 +313,28 @@ export const CreateScreen = () => {
 			style={[
 				styles.container,
 				{ backgroundColor: colors.colors.background },
-			]}>
+			]}
+		>
 			<KeyboardAvoidingView
 				behavior='padding'
 				style={[
 					styles.container,
 					{ backgroundColor: colors.colors.background },
-				]}>
+				]}
+			>
 				<View
 					style={[
 						styles.header,
 						{ borderColor: colors.colors.border },
-					]}>
+					]}
+				>
 					<Text style={[{ color: colors.colors.text }, styles.title]}>
 						Create new todo catégorie
 					</Text>
 				</View>
 				<View
-					style={[
-						styles.body,
-						{ borderColor: colors.colors.border },
-					]}>
+					style={[styles.body, { borderColor: colors.colors.border }]}
+				>
 					<View
 						style={[
 							styles.content,
@@ -349,7 +342,8 @@ export const CreateScreen = () => {
 								backgroundColor: colors.colors.card,
 								borderColor: colors.colors.border,
 							},
-						]}>
+						]}
+					>
 						<Button
 							onPress={() => {
 								setModalOpen(true)
@@ -358,7 +352,7 @@ export const CreateScreen = () => {
 							label='Select Icon'
 						/>
 						<Text style={{ fontSize: 50 }}>
-							{selectedEmoji?.char}
+							{selectedEmoji?.emoji}
 						</Text>
 					</View>
 					<View
@@ -368,7 +362,8 @@ export const CreateScreen = () => {
 								backgroundColor: colors.colors.card,
 								borderColor: colors.colors.border,
 							},
-						]}>
+						]}
+					>
 						<Button
 							onPress={() => {
 								setModalOpen(true)
@@ -392,7 +387,8 @@ export const CreateScreen = () => {
 								backgroundColor: colors.colors.card,
 								borderColor: colors.colors.border,
 							},
-						]}>
+						]}
+					>
 						<TextInput
 							style={[
 								{
@@ -423,7 +419,8 @@ export const CreateScreen = () => {
 							setSelection(null)
 						}}
 						selectData={selection}
-						title='Choose icon'>
+						title='Choose icon'
+					>
 						{emojiChild()}
 						{colorChild()}
 					</ModalPicker>

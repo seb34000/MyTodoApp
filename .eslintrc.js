@@ -25,6 +25,7 @@ module.exports = {
 		'jsx-quotes': ['error', 'prefer-single'],
 		semi: ['error', 'never'],
 		'no-trailing-spaces': ['error', { ignoreComments: true }],
+		'no-case-declarations': 'off',
 		'prettier/prettier': [
 			'error',
 			{
@@ -42,7 +43,7 @@ module.exports = {
 				parser: 'typescript',
 				qouteProps: 'as-needed',
 				jsxSingleQuote: true,
-				jsxBracketSameLine: true,
+				jsxBracketSameLine: false,
 			},
 			{},
 		],

@@ -2,11 +2,13 @@ import React from 'react'
 
 import { TouchableOpacity, StyleSheet, Text } from 'react-native'
 import { useTheme } from '@react-navigation/native'
+import { hexToRgba } from '../utils/hexToRgba'
 
 interface ButtonProps {
 	onPress: () => void
 	label: string
 	icon?: React.ReactNode
+	style?: any
 }
 
 export const Button = (props: ButtonProps) => {
@@ -14,14 +16,19 @@ export const Button = (props: ButtonProps) => {
 
 	return (
 		<TouchableOpacity
-			style={[styles.button, { backgroundColor: colors.colors.primary }]}
-			onPress={props.onPress}>
+			style={[
+				styles.button,
+				props.style,
+				{ backgroundColor: hexToRgba(colors.colors.primary, 0.6) },
+			]}
+			onPress={props.onPress}
+		>
 			{props.icon}
 			<Text
 				style={{
 					color: colors.colors.text,
-					fontWeight: '600',
-				}}>
+				}}
+			>
 				{props.label}
 			</Text>
 		</TouchableOpacity>
